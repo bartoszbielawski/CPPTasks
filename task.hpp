@@ -1,15 +1,19 @@
 #pragma once
 
-#include <functional>
 #include <cstdint>
+#include <algorithm>
+#include <iostream>
 
-namespace Task
+#define TASK(name) class name: public Tasks::TaskCTRP<name>
+
+namespace Tasks
 {
   enum class State
   {
     READY,
     SLEEPING,
-    SUSPENDED
+    SUSPENDED,
+    DEAD
   };
 
   class Task
@@ -28,6 +32,7 @@ namespace Task
       void resume() {_state = State::READY;}
       void suspend() {_state = State::SUSPENDED;}
       void sleep(uint32_t ticks) {_timer = ticks; _state = State::SLEEPING;}
+      void kill() {_timer = 0; _state = State::DEAD;}
 
       uint32_t decreaseTimer() {return --_timer;}
 
@@ -63,16 +68,18 @@ namespace Task
         if (e == nullptr)
           continue;
 
-        switch (e->getState())
-        {
-          case State::READY:
-            e->run();
-            break;
-          case State::SLEEPING:
-          case State::SUSPENDED:
-            break;
-        }
+        if (e->getState() == State::READY)
+          e->run();
       }
+  }
+
+  template <class T>
+  void removeDead(T& container)
+  {
+    container.erase(std::remove_if(std::begin(container), std::end(container), [](typename T::value_type& v) {
+      auto s = v->getState();
+      return s == State::DEAD;
+    }), container.end());
   }
 
   template <class T>

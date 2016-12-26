@@ -2,5 +2,10 @@
 
 CXXFLAGS=-std=c++11 -pthread
 
+TARGET=main
+
 all:
-		$(CXX) $(CXXFLAGS) -o main main.cpp
+		$(CXX) $(CXXFLAGS) -o $(TARGET) main.cpp
+
+clean:
+		rm $(TARGET)
