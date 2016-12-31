@@ -1,6 +1,6 @@
 
 
-CXXFLAGS=-std=c++11 -pthread
+CXXFLAGS=-std=c++11 -pthread -fdump-class-hierarchy -O2
 
 TARGET=main
 
