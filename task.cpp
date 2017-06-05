@@ -3,7 +3,7 @@
 using namespace std;
 using namespace Tasks;
 
-void scheduleSingle(Task* t)
+void Tasks::scheduleSingle(Task* t)
 {
 	if (t == nullptr)
 		return;
@@ -12,7 +12,7 @@ void scheduleSingle(Task* t)
 		t->run();
 }
 
-void updateSleepSingle(Task* t)
+void Tasks::updateSleepSingle(Task* t)
 {
 	if (!t)
 		return;
