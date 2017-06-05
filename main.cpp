@@ -84,12 +84,19 @@ public:
   }
 };
 
+void myUpdateSleep()
+{
+	for (auto& e: tasks)
+	{
+		updateSleepSingle(e.get());
+	}
+}
 
 void timerISR()
 {
   while (run)
   {
-    updateSleep(tasks);
+	myUpdateSleep();
     sleep(1);
     timer++;
   }
@@ -99,6 +106,14 @@ void stop()
 {
   sleep(10);
   run = false;
+}
+
+void mySchedule()
+{
+		for (auto& e: tasks)
+		{
+			scheduleSingle(e.get());
+		}
 }
 
 int main()
@@ -118,8 +133,7 @@ int main()
 
   while (run)
   {
-    schedule(tasks);
-    removeDead(tasks);
+	  mySchedule();
   }
 
   s.join();
