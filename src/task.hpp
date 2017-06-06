@@ -3,6 +3,7 @@
  *
  *  Created on: 12.2016
  *      Author: Bartosz Bielawski
+ *     License: MIT
  */
 
 #pragma once
