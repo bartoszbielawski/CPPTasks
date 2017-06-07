@@ -23,6 +23,7 @@
 
 namespace Tasks
 {
+	//describes state of the task
 	enum class State
 	{
 		READY,
@@ -32,6 +33,7 @@ namespace Tasks
 		WAITING
 	};
 
+	//template for conditions for waking threads from a waiting state
 	template <class CondType>
 	class Condition
 	{
@@ -43,6 +45,7 @@ namespace Tasks
 			CondType _cond;
 	};
 
+	//specialized template if no condition is needed
 	template <>
 	class Condition<void>
 	{
@@ -61,8 +64,11 @@ namespace Tasks
 			Task& operator=(Task& other) = delete;
 			Task(Task& other) = delete;
 
+			//overload this method in your classes
 			virtual void run() = 0;
+			//overload to provide interface to check waking condition
 			virtual bool checkCondition() {return false;}
+			//overload to provide common interface to resetting task state
 			virtual void reset() {}
 
 			State getState() const {return _state;}
@@ -88,10 +94,12 @@ namespace Tasks
 	using SimpleCond = bool (*)();
 	using LambdaCond = std::function<bool()>;
 
+	//this class provides a nice interface to switch between states
 	template <class T, class CondType = void>
 	class TaskCRTP: public Task
 	{
 		public:
+			//provide the initial state of the FSM
 			TaskCRTP(TaskState<T> s):  nextState(s) {}
 			virtual ~TaskCRTP() {}
 
@@ -105,6 +113,7 @@ namespace Tasks
 				return condition.check();
 			}
 
+			//this function is enabled only when CondType is not void
 			template <class Q = CondType>
 			typename std::enable_if<!std::is_same<Q, void>::value, void>
 			wait(uint32_t ticks, Q cond)
@@ -118,8 +127,10 @@ namespace Tasks
 			Condition<CondType> condition;
 	};
 
+	//processes a single task according to its state
 	void scheduleSingle(Task* t);
 
+	//processes all the tasks in the container
 	template <class T>
 	void schedule(const T& container)
 	{
@@ -130,6 +141,7 @@ namespace Tasks
 	}
 
 #ifdef TASKS_ERASE
+	//erases from the container
 	template <class T>
 	void removeDead(T& container)
 	{
@@ -140,8 +152,10 @@ namespace Tasks
 	}
 #endif
 
+	//updates sleep timer for a single task
 	void updateSleepSingle(Task* t);
 
+	//convenience wrapper for a container
 	template <class T>
 	void updateSleep(const T& container)
 	{

@@ -1,3 +1,11 @@
+/*
+ * task.cpp
+ *
+ *  Created on: 12.2016
+ *      Author: Bartosz Bielawski
+ *     License: MIT
+ */
+
 #include "task.hpp"
 
 using namespace std;
