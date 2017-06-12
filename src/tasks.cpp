@@ -1,5 +1,5 @@
 /*
- * task.cpp
+ * tasks.cpp
  *
  *  Created on: 12.2016
  *      Author: Bartosz Bielawski

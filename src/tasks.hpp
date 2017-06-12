@@ -1,5 +1,5 @@
 /*
- * task.hpp
+ * tasks.hpp
  *
  *  Created on: 12.2016
  *      Author: Bartosz Bielawski
@@ -8,8 +8,8 @@
 
 #pragma once
 
-#ifndef TASK_HPP
-#define TASK_HPP
+#ifndef TASKS_HPP
+#define TASKS_HPP
 
 #include <cstdint>
 #include <functional>
@@ -168,4 +168,4 @@ namespace Tasks
 }	//end namespace
 
 
-#endif //TASK_HPP
+#endif //TASKS_HPP
