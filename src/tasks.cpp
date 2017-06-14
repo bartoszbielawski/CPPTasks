@@ -6,9 +6,8 @@
  *     License: MIT
  */
 
-#include "task.hpp"
+#include "tasks.hpp"
 
-using namespace std;
 using namespace Tasks;
 
 void Tasks::scheduleSingle(Task* t)

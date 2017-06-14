@@ -11,13 +11,12 @@
 #ifndef TASKS_HPP
 #define TASKS_HPP
 
-#include <cstdint>
+//TODO: replace it with <cstdint> when more platforms support it
+#include <stdint.h>
+
+#ifdef HAS_STL
 #include <functional>
 #include <type_traits>
-
-#define TASKS_ERASE
-
-#ifdef TASKS_ERASE
 #include <algorithm>
 #endif
 
@@ -92,10 +91,17 @@ namespace Tasks
 	using TaskState = void (T::*)();
 
 	using SimpleCond = bool (*)();
+
+#ifdef HAS_STL
 	using LambdaCond = std::function<bool()>;
+#endif
 
 	//this class provides a nice interface to switch between states
+#ifdef HAS_STL
 	template <class T, class CondType = void>
+#else
+	template <class T, class CondType = SimpleCond>
+#endif
 	class TaskCRTP: public Task
 	{
 		public:
@@ -113,6 +119,13 @@ namespace Tasks
 				return condition.check();
 			}
 
+#ifndef HAS_STL
+			void wait(uint32_t ticks, CondType cond)
+			{
+				condition.set(cond);
+				_wait(ticks);
+			}
+#else
 			//this function is enabled only when CondType is not void
 			template <class Q = CondType>
 			typename std::enable_if<!std::is_same<Q, void>::value, void>
@@ -121,6 +134,7 @@ namespace Tasks
 					condition.set(cond);
 					_wait(ticks);
 			}
+#endif
 
 		protected:
 			TaskState<T> nextState;
@@ -140,7 +154,7 @@ namespace Tasks
 			}
 	}
 
-#ifdef TASKS_ERASE
+#ifdef HAS_STL
 	//erases from the container
 	template <class T>
 	void removeDead(T& container)
